@@ -74,7 +74,6 @@ if "df_ensayos" not in st.session_state:
 
 df_ensayos = st.session_state.df_ensayos
 
-
 # ========================================
 # SECCIÓN 1: REGISTRO DE ENSAYO
 # ========================================
@@ -183,3 +182,9 @@ if not st.session_state.df_ensayos.empty:
     
 else:
     st.info("No se han registrado ensayos aún. Completa el formulario para agregar resultados.")
+
+
+st.sidebar.markdown("Desarrollado por Daniel Ramírez")
+st.sidebar.markdown("Ingeniero Civil | Desarrollo de Soluciones Analíticas" )
+st.sidebar.markdown("Email: ingdanielrayez@gmail.com")
+st.sidebar.markdown("Linkedin: https://www.linkedin.com/in/danielorlando-ramirez/")
