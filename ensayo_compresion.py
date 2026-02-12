@@ -184,7 +184,25 @@ else:
     st.info("No se han registrado ensayos aún. Completa el formulario para agregar resultados.")
 
 
-st.sidebar.markdown("Desarrollado por Daniel Ramírez")
-st.sidebar.markdown("Ingeniero Civil | Desarrollo de Soluciones Analíticas" )
-st.sidebar.markdown("Email: ingdanielrayez@gmail.com")
-st.sidebar.markdown("Linkedin: https://www.linkedin.com/in/danielorlando-ramirez/")
+
+linkedin = "https://www.linkedin.com/in/danielorlando-ramirez/" 
+email = "ingdanielrayez@gmail.com"
+
+st.sidebar.markdown("---")
+
+st.sidebar.markdown(
+    f"""
+    <div style='text-align: center; font-size: 12px; color: #888888; line-height: 1.6;'>
+        Desarrollado por<br>
+        <strong>Daniel Ramírez</strong><br>
+        Ingeniero Civil | Desarrollo de Soluciones Analíticas<br><br>
+        <a href="{linkedin}" target="_blank" style="color: #888888; text-decoration: none;">
+            LinkedIn
+        </a> |
+        <a href="mailto:{email}" style="color: #888888; text-decoration: none;">
+            Email
+        </a>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
