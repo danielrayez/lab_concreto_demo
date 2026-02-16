@@ -1,0 +1,19 @@
+norma,size_number,material,tamiz_mm,tamiz_nombre,limite_min,limite_max
+NTC174,Fino,Arena,9.5,3/8",100,100
+NTC174,Fino,Arena,4.74,N4,95,100
+NTC174,Fino,Arena,2.36,N8,80,100
+NTC174,Fino,Arena,1.18,N16,50,85
+NTC174,Fino,Arena,0.6,N30,25,60
+NTC174,Fino,Arena,0.3,N50,5,30
+NTC174,Fino,Arena,0.15,N100,0,10
+NTC174,Fino,Arena,0.075,N200,0,3
+NTC174,67,Grava 12.5mm,19.0,3/4",100,100
+NTC174,67,Grava 12.5mm,12.5,1/2",90,100
+NTC174,67,Grava 12.5mm,9.5,3/8",40,70
+NTC174,67,Grava 12.5mm,4.75,N4,0,15
+NTC174,67,Grava 12.5mm,2.36,N8,0,5
+NTC174,7,Grava 9.5mm,12.5,1/2",100,100
+NTC174,7,Grava 9.5mm,9.5,3/8",90,100
+NTC174,7,Grava 9.5mm,4.75,N4,20,55
+NTC174,7,Grava 9.5mm,2.36,N8,0,10
+NTC174,7,Grava 9.5mm,1.18,N16,0,5
