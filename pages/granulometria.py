@@ -92,7 +92,7 @@ with col2:
 
 with col3:
     try:
-        df = pd.read_csv(r'../ensayos/gram_limites.txt')
+        df = pd.read_csv('ensayos/gram_limites.txt')
         df["tamaño-tmn"] = df.apply(
         lambda x: f"#{x['#tamanio']}-{x['TMN']}"
         if x["#tamanio"].isdigit()
