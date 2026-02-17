@@ -232,5 +232,5 @@ st.pyplot(fig)
 # un boton para descargar la pantalla como imagen
 if st.button("Descargar gráfico"):
     fig.savefig("grafico_granulometrico.png")
-    st.success("Gráfico descargado como 'grafico_granulometrico.png'")
+    st.success(f"Gráfico descargado como 'granulometría-{agg}'.png'")
 

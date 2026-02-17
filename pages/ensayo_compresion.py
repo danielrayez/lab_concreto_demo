@@ -109,17 +109,12 @@ with col2:   #Norma técnica con enlace
     fecha_f = st.markdown(f"<h5 style='text-align: left; font-weight: bold; margin: 0; padding: 15px;'>{fecha}</h5>", unsafe_allow_html=True)
 
 
-# with col3:     #texto con fecha del día de hoy centrado y en negrita  
-
-#     fecha = date.today().strftime("%d/%m/%Y") 
-#     fecha_f = st.markdown(f"<h5 style='text-align: left; font-weight: bold; margin: 0; padding: 15px;'>{fecha}</h5>", unsafe_allow_html=True)
-
 col1, col2, col3 = st.columns(3)
 
 with col1:
     muestra = st.text_input("Nombre de la muestra", placeholder="Ej: Muestra 1")
     dimensiones = st.selectbox("Dimensiones del cilindro", ["100x200 mm", "150x300 mm", "Otras dimensiones"], help="Selecciona las dimensiones estándar o elige 'Otras dimensiones' para ingresar medidas personalizadas")
-    peso = st.number_input("Peso (kg)", value= None , placeholder="Ej: 3.5")
+    peso = st.number_input("Peso (kg)", value= None , placeholder="Ej: 3,5")
 
     # Asignar valores de diámetro y altura según dimensiones
     if dimensiones == "100x200 mm":
