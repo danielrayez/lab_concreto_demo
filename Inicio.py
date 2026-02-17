@@ -40,6 +40,8 @@ Esta aplicación es una muestra de un <b>Sistema de Gestión para Laboratorios d
 que cubre el proceso completo: desde la recepción de muestras hasta la generación de informes técnicos.
 <br><br>
 Diseñado especialmente para <b>Pymes en la industria de la construcción</b> que buscan digitalizar y organizar sus ensayos sin sistemas complejos ni costosos.
+<br><br>
+En caso de detectar un corportamiento no esperado puede reportar al correo abajo mostrado.
 </div>
 """, unsafe_allow_html=True)
 
