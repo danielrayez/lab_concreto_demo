@@ -206,11 +206,11 @@ ax.plot(df_display['Tamiz (mm)'], df_display['% Pasante'], 'y--s', label='% Pasa
 ax.fill_between(df_agg['tamiz_mm'], df_agg['limite_min'], df_agg['limite_max'], alpha=0.2, color='lightgreen')
 
 # Configurar ejes
-ax.set_xlabel('Tamiz (mm)', fontsize=12)
-ax.set_ylabel('Porcentaje Retenido Acumulado (%)', fontsize=12)
+ax.set_xlabel('Tamiz (mm)', fontsize=10)
+ax.set_ylabel('Porcentaje Retenido Acumulado (%)', fontsize=10)
 # ax.set_title(f'Límites Granulométricos - Norma NTC174 ({agg})', fontsize=14, fontweight='bold')
 ax.grid(True, alpha=0.5)
-ax.legend(fontsize=11)
+ax.legend(fontsize=10)
 
 # Configurar escala logarítmica en eje x
 ax.set_xscale('log')
