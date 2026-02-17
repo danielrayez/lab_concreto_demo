@@ -227,7 +227,7 @@ ax.invert_xaxis()
 
 plt.tight_layout()
 
-st.pyplot(fig)
+st.pyplot(fig, use_container_width = False)
 
 # un boton para descargar la pantalla como imagen
 if st.button("Descargar gráfico"):
