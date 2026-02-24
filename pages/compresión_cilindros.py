@@ -1,8 +1,8 @@
 import streamlit as st
 import pandas as pd
 from datetime import date
-from ensayos.cal_concreto import area_cilindro, resistencia_compresion, evolucion_resistencia , volumen_cilindro, densidad_cilindro
-from ensayos.factores_ld import factor_ld
+from calculos.cal_concreto import area_cilindro, resistencia_compresion, evolucion_resistencia , volumen_cilindro, densidad_cilindro
+from utils.factores_ld import factor_ld
 
 # ========================================
 # BARRA LATERAL PRESENTACIÓN
