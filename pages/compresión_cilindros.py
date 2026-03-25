@@ -2,17 +2,22 @@ import streamlit as st
 import pandas as pd
 from datetime import date
 from calculos.cal_concreto import area_cilindro, resistencia_compresion, evolucion_resistencia , volumen_cilindro, densidad_cilindro
+from utils.report.compresion_cilindros_pdf import compresion_cilindros_pdf as generar_pdf
 from utils.factores_ld import factor_ld
+
+# ========================================
+# CONFIGURACIÓN INICIAL
+# ========================================
+st.set_page_config(page_title="Laboratorio Concreto", layout="wide")
 
 # ========================================
 # BARRA LATERAL PRESENTACIÓN
 # ========================================
-
 linkedin = "https://www.linkedin.com/in/danielorlando-ramirez/" 
 email = "ingdanielrayez@gmail.com"
 
 st.sidebar.markdown(
-    "<div style='height:240px;'></div>",
+    "<div style='height:32px;'></div>",  
     unsafe_allow_html=True
 )
 st.sidebar.markdown(
@@ -40,42 +45,31 @@ css = """
     .stApp {
         background-color: #fafafa; /*gris claro*/
     }
+
+    /* Compactar márgenes del contenido principal */
+    .block-container {
+        padding-top: 1.4rem !important;   /* antes 0.6rem */
+        padding-bottom: 0.6rem !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        max-width: 100% !important;
+    }
+
+    /* Menos separación vertical entre bloques */
+    div[data-testid="stVerticalBlock"] > div:has(> div.element-container) {
+        gap: 0.35rem !important;
+    }
+
     a.anchor-link {
         display: none !important;
     }
+
     [data-testid="stMetricValue"] {
-        font-size: 28px;
+        font-size: 24px; /* antes 28px */
     }   
 </style>
 """
 st.markdown(css, unsafe_allow_html=True)
-
-# ========================================
-# CONFIGURACIÓN INICIAL
-# ========================================
-
-st.set_page_config(page_title="Laboratorio Concreto", layout="wide")
-
-#2 COLUMNAS
-col_e1, col_e2 = st.columns([7,3])
-
-with col_e1:
-    st.title("Compresión de Cilindros de Concreto")
-
-with col_e2:
-
-    norma = " NTC 673 (Colombia)" 
-    url = "https://es.slideshare.net/slideshow/ntc-673-compresion-concretos/17107178"  
-
-    norma_s = st.markdown(
-        f"""
-        <h5 style='text-align: left; font-weight: bold; margin: 0; color: #2E86C1; padding: 40px;'>
-            <a href="{url}" target="_blank" style="text-decoration: none; color: inherit;">
-                {norma}
-            </a>
-        </h5>
-    """,
-    unsafe_allow_html=True, help="Haz clic para ver la norma NTC 673")
 
 # ========================================
 #  AUXILIARES
@@ -96,18 +90,67 @@ if "df_ensayos" not in st.session_state:
 
 df_ensayos = st.session_state.df_ensayos
 
-# ========================================
-# SECCIÓN 1: REGISTRO DE ENSAYO
-# ========================================
+# Inicializar encabezado PDF (si no existe)
+if "pdf_encabezado" not in st.session_state:
+    st.session_state.pdf_encabezado = {
+        "ciudad": "Bogotá D.C.",
+        "fecha_generacion": date.today().strftime("%d/%m/%Y %H:%M"),
+        "obra": "",
+        "desarrollado_por": "",
+    }
 
-col1, col2, col3 = st.columns(3)
+col1, col2, col3 = st.columns([5,3,2])
+
 with col1:
-    st.write("### Registro de Ensayo")
+    st.title("Compresión de Cilindros")
 
-with col2:   #Norma técnica con enlace
-    fecha = date.today().strftime("%d/%m/%Y") 
-    fecha_f = st.markdown(f"<h5 style='text-align: left; font-weight: bold; margin: 0; padding: 15px;'>{fecha}</h5>", unsafe_allow_html=True)
+with col2:
+    norma = "NTC 673 (Colombia)"
+    url = "https://es.slideshare.net/slideshow/ntc-673-compresion-concretos/17107178"
+    st.markdown(
+        f"""
+        <h5 style='text-align: right; font-weight: bold; margin: 0; color: #2E86C1; padding: 35px;'>
+            <a href="{url}" target="_blank" style="text-decoration: none; color: inherit;">
+                {norma}
+            </a>
+        </h5>
+    """,
+    unsafe_allow_html=True
+    )
 
+with col3:
+    fecha = date.today().strftime("%d/%m/%Y")
+    st.markdown(
+        f"<h5 style='text-align: right; font-weight: bold; margin: 0; padding: 35px;'>{fecha}</h5>",
+        unsafe_allow_html=True
+    )
+
+
+
+# Formulario compacto (entre título y "Registro de Ensayo")
+with st.form("form_encabezado_pdf", clear_on_submit=False):
+    c1, c2, c3, c4 = st.columns([2, 2, 3, 3])
+    with c1:
+        ciudad = st.text_input("Ciudad", value=st.session_state.pdf_encabezado["ciudad"])
+    with c2:
+        fecha_gen = st.text_input("Fecha generación", value=st.session_state.pdf_encabezado["fecha_generacion"])
+    with c3:
+        obra = st.text_input("Obra", value=st.session_state.pdf_encabezado["obra"])
+    with c4:
+        desarrollado_por = st.text_input("Elaborado por", value=st.session_state.pdf_encabezado["desarrollado_por"])
+
+    guardar_hdr = st.form_submit_button("Guardar encabezado", use_container_width=True)
+
+if guardar_hdr:
+    st.session_state.pdf_encabezado = {
+        "ciudad": ciudad.strip(),
+        "fecha_generacion": fecha_gen.strip(),
+        "obra": obra.strip(),
+        "desarrollado_por": desarrollado_por.strip(),
+    }
+   
+
+st.markdown("### Registro de Ensayo")
 
 col1, col2, col3 = st.columns(3)
 
@@ -193,8 +236,32 @@ st.markdown("### Resultados", help="para descargar resultados en formato csv use
 if not st.session_state.df_ensayos.empty:
     # Mostrar tabla
     df_display = st.session_state.df_ensayos.copy()
-    st.dataframe(df_display, width= "content", hide_index=True)
+
+    # Altura dinámica según número de ensayos (filas)
+    altura_tabla = 38 + (len(df_display) * 35)  # header + filas
+
+    st.dataframe(
+        df_display,
+        use_container_width=True,
+        hide_index=True,
+        height=altura_tabla
+    )
     
 else:
     st.info("No se han registrado ensayos aún. Completa el formulario para agregar resultados.")
+
+st.divider()
+pdf_data = (
+    generar_pdf(st.session_state.df_ensayos, st.session_state.pdf_encabezado)
+    if not st.session_state.df_ensayos.empty
+    else b""
+)
+st.download_button(
+    label="Generar PDF",
+    data=pdf_data,
+    file_name=f"ensayos_compresion_{date.today().isoformat()}.pdf",
+    mime="application/pdf",
+    type="secondary",
+    disabled=st.session_state.df_ensayos.empty,
+)
 

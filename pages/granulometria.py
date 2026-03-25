@@ -3,6 +3,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 from datetime import date
+from utils.report.granulometria_pdf import granulometria_pdf
+
 
 # ========================================
 # BARRA LATERAL PRESENTACIÓN
@@ -145,6 +147,8 @@ with col_c7:
 pasa_inputs = []
 retenido_acumulado = 0.0
 pasante_values = []
+retenido_porcentaje_values = []
+retenido_acumulado_values = []
 
 
 
@@ -169,10 +173,12 @@ for idx, row in df_display.iterrows():
 
     with col_5:
         retenido_porcentaje = (pasa_value / peso_muestra * 100) if peso_muestra > 0 else 0
+        retenido_porcentaje_values.append(retenido_porcentaje)
         st.write(f"{retenido_porcentaje:.2f}")
     
     with col_6:
         retenido_acumulado += retenido_porcentaje
+        retenido_acumulado_values.append(retenido_acumulado)
         st.write(f"{retenido_acumulado:.2f}")
     
     
@@ -182,6 +188,8 @@ for idx, row in df_display.iterrows():
         st.write(f"{pasante_porcentaje:.2f}")
         
 df_display['Retenido (g)'] = pasa_inputs
+df_display['% Retenido'] = retenido_porcentaje_values
+df_display['% Retenido Acumulado'] = retenido_acumulado_values
 df_display['% Pasante'] = pasante_values
 
 # Mostrar total de pasante
@@ -229,8 +237,13 @@ plt.tight_layout()
 
 st.pyplot(fig, use_container_width = False)
 
-# un boton para descargar la pantalla como imagen
-if st.button("Descargar gráfico"):
-    fig.savefig("grafico_granulometrico.png")
-    st.success(f"Gráfico descargado como 'granulometría-{agg}'.png'")
+df_pdf = df_display[["Tamiz (mm)", "% Retenido", "% Retenido Acumulado", "% Pasante"]].copy()
+pdf_data = granulometria_pdf(muestra, agg, df_pdf, fig)
+st.download_button(
+    label="Generar PDF",
+    data=pdf_data,
+    file_name=f"granulometria_{date.today().isoformat()}.pdf",
+    mime="application/pdf",
+    type="secondary",
+)
 
