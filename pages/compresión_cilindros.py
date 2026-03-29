@@ -67,6 +67,11 @@ css = """
     [data-testid="stMetricValue"] {
         font-size: 24px; /* antes 28px */
     }   
+
+    /* Fondo destacado para el campo Carga */
+    div[data-testid="stVerticalBlockBorderWrapper"] {
+        background-color: #FFF8E1 !important;
+    }
 </style>
 """
 st.markdown(css, unsafe_allow_html=True)
@@ -175,7 +180,9 @@ with col2:
     fc = st.number_input("F'c (MPa)", min_value=15.0, step= 1.0)
     diametro = st.number_input("Diámetro (mm)", min_value=1.0, value=float(diametro_default), step=0.1)
     area = area_cilindro(diametro)
-    carga = st.number_input("Carga (kN)", min_value=1.0, step=0.1)
+
+    with st.container(border=True):
+        carga = st.number_input("Carga (kN)", min_value=1.0, step=0.1)
 
 
 with col3:
