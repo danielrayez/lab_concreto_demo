@@ -288,13 +288,17 @@ plt.tight_layout()
 st.pyplot(fig, use_container_width = False)
 
 df_pdf = df_display[["Tamiz (mm)", "% Retenido", "% Retenido Acumulado", "% Pasante"]].copy()
-pdf_data = granulometria_pdf(
-    muestra=muestra,
-    tipo_agregado=agg,
-    df_resultados=df_pdf,
-    fig=fig,
-    encabezado=st.session_state.pdf_encabezado,
-)
+# Compatibilidad con despliegues donde la función PDF aún no tiene el parámetro encabezado.
+try:
+    pdf_data = granulometria_pdf(
+        muestra,
+        agg,
+        df_pdf,
+        fig,
+        st.session_state.pdf_encabezado,
+    )
+except TypeError:
+    pdf_data = granulometria_pdf(muestra, agg, df_pdf, fig)
 st.download_button(
     label="Generar PDF",
     data=pdf_data,
