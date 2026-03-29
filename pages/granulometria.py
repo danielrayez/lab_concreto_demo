@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
-from datetime import date
+from datetime import date, datetime
 from utils.report.granulometria_pdf import granulometria_pdf
 
 
@@ -40,23 +40,52 @@ st.sidebar.markdown(
 # ESTILOS CSS
 # ========================================
 
+
 css = """
 <style>
     .stApp {
-        background-color: #fafafa;
+        background-color: #fafafa; /*gris claro*/
     }
+
+    /* Compactar márgenes del contenido principal */
+    .block-container {
+        padding-top: 1.4rem !important;   /* antes 0.6rem */
+        padding-bottom: 0.6rem !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        max-width: 100% !important;
+    }
+
+    /* Menos separación vertical entre bloques */
+    div[data-testid="stVerticalBlock"] > div:has(> div.element-container) {
+        gap: 0.35rem !important;
+    }
+
     a.anchor-link {
         display: none !important;
     }
+
+    [data-testid="stMetricValue"] {
+        font-size: 24px; /* antes 28px */
+    }   
 </style>
 """
 st.markdown(css, unsafe_allow_html=True)
+
 
 # ========================================
 # CONFIGURACIÓN INICIAL
 # ========================================
 
 st.set_page_config(page_title="Laboratorio Concreto", layout="wide")
+
+if "pdf_encabezado" not in st.session_state:
+    st.session_state.pdf_encabezado = {
+        "ciudad": "Medellín",
+        "fecha_generacion": datetime.now().strftime("%d/%m/%Y %H:%M"),
+        "obra": "",
+        "desarrollado_por": "Daniel Ramírez",
+    }
 
 col1, col2, col3 = st.columns([5,3,2])
 with col1:
@@ -76,10 +105,31 @@ with col2:
     unsafe_allow_html=True
     )
 
-with col3: 
+with col3:
     fecha = date.today().strftime("%d/%m/%Y")
     st.markdown(f"<h5 style='text-align: right; font-weight: bold; margin: 0; padding: 35px;'>{fecha}</h5>", unsafe_allow_html=True)
-    
+
+with st.form("form_encabezado_pdf", clear_on_submit=False):
+    c1, c2, c3, c4 = st.columns([2, 2, 3, 3])
+    with c1:
+        ciudad = st.text_input("Ciudad", value=st.session_state.pdf_encabezado["ciudad"])
+    with c2:
+        fecha_gen = st.text_input("Fecha generación", value=st.session_state.pdf_encabezado["fecha_generacion"])
+    with c3:
+        obra = st.text_input("Obra", value=st.session_state.pdf_encabezado["obra"])
+    with c4:
+        desarrollado_por = st.text_input("Elaborado por", value=st.session_state.pdf_encabezado["desarrollado_por"])
+
+    guardar_hdr = st.form_submit_button("Guardar encabezado", use_container_width=True)
+
+if guardar_hdr:
+    st.session_state.pdf_encabezado = {
+        "ciudad": ciudad.strip(),
+        "fecha_generacion": fecha_gen.strip(),
+        "obra": obra.strip(),
+        "desarrollado_por": desarrollado_por.strip(),
+    }
+
 # ========================================
 # SECCIÓN 1: Datos de entrada
 # ========================================
@@ -238,7 +288,13 @@ plt.tight_layout()
 st.pyplot(fig, use_container_width = False)
 
 df_pdf = df_display[["Tamiz (mm)", "% Retenido", "% Retenido Acumulado", "% Pasante"]].copy()
-pdf_data = granulometria_pdf(muestra, agg, df_pdf, fig)
+pdf_data = granulometria_pdf(
+    muestra=muestra,
+    tipo_agregado=agg,
+    df_resultados=df_pdf,
+    fig=fig,
+    encabezado=st.session_state.pdf_encabezado,
+)
 st.download_button(
     label="Generar PDF",
     data=pdf_data,

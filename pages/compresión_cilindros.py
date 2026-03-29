@@ -93,10 +93,11 @@ df_ensayos = st.session_state.df_ensayos
 # Inicializar encabezado PDF (si no existe)
 if "pdf_encabezado" not in st.session_state:
     st.session_state.pdf_encabezado = {
-        "ciudad": "Bogotá D.C.",
+  
+        "ciudad": "Medellín",
         "fecha_generacion": date.today().strftime("%d/%m/%Y %H:%M"),
         "obra": "",
-        "desarrollado_por": "",
+        "desarrollado_por": "Daniel Ramírez",
     }
 
 col1, col2, col3 = st.columns([5,3,2])

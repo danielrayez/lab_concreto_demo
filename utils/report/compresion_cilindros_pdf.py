@@ -71,7 +71,8 @@ def compresion_cilindros_pdf(
     ]))
     elementos.append(tabla_encabezado)
     elementos.append(Spacer(1, 12))
-    elementos.append(Paragraph("<b>Laboratorio de Materiales</b>", estilos["Title"]))
+    elementos.append(Paragraph("<b>Ensayo de compresión de cilindros (NTC 673)</b>", estilos["Title"]))
+
     #centra el texto normal debajo del título
     
     estilo_texto_centrado = ParagraphStyle(
@@ -80,12 +81,6 @@ def compresion_cilindros_pdf(
         alignment=1,  # CENTER
     )
 
-    elementos.append(
-        Paragraph(
-            "Reporte de ensayo de compresión de cilindros (NTC 673)",
-            estilo_texto_centrado
-        )
-    )
     elementos.append(Spacer(1, 12))
 
     columnas = [
